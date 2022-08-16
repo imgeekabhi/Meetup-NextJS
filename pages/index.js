@@ -1,28 +1,32 @@
+import { MongoClient } from "mongodb";
 import MeetupList from "../components/meetups/MeetupList";
 
-const DUMMY_MEETUPS = [
-  {
-    id: "m1",
-    title: "A First Meetup",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/8/87/Palace_of_Westminster_from_the_dome_on_Methodist_Central_Hall.jpg",
-    address: "Riverside Building, County Hall, London SE1 7PB, United Kingdom",
-    description:
-      "The London Eye, or the Millennium Wheel, is a cantilevered observation wheel on the South Bank of the River Thames in London.",
-  },
-  {
-    id: "m2",
-    title: "A Second Meetup",
-    image:
-      "https://www.thegeographicalcure.com/wp-content/uploads/2022/04/Depositphotos_210765948_XL-1024x683.jpg",
-    address: "London SE4 7PJ, United Kingdom",
-    description:
-      "Westminster Abbey, formally titled the Collegiate Church of Saint Peter at Westminster",
-  },
-];
+const HomePage = (props) => {
+  return <MeetupList meetups={props.meetups} />;
+};
 
-const HomePage = () => {
-  return <MeetupList meetups={DUMMY_MEETUPS} />;
+export const getStaticProps = async () => {
+  const client = await MongoClient.connect(
+    "mongodb+srv://as_simform:xeVxxhmpHU4TpTVW@cluster0.ze4ag0i.mongodb.net/meetups?retryWrites=true&w=majority"
+  );
+  const db = client.db();
+  const meetupsCollection = db.collection("meetups");
+
+  const meetups = await meetupsCollection.find().toArray();
+  client.close();
+
+  return {
+    props: {
+      meetups: meetups.map((meetup) => ({
+        title: meetup.title,
+        image: meetup.image,
+        address: meetup.address,
+        description: meetup.description,
+        id: meetup._id.toString(),
+      })),
+    },
+    revalidate: 1,
+  };
 };
 
 export default HomePage;
