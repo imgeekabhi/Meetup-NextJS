@@ -1,11 +1,7 @@
 import { MongoClient, ObjectId } from "mongodb";
 import Head from "next/head";
 import MeetupDetail from "../components/meetups/MeetupDetail";
-import { useRouter } from "next/router";
 const MeetupDetails = ({ meetupData }) => {
-  // const router = useRouter();
-  // const id = router.query.meetupId;
-
   return (
     <>
       <Head>
