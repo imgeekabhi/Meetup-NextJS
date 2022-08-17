@@ -1,4 +1,5 @@
 import { MongoClient, ObjectId } from "mongodb";
+import Head from "next/head";
 import MeetupDetail from "../components/meetups/MeetupDetail";
 import { useRouter } from "next/router";
 const MeetupDetails = ({ meetupData }) => {
@@ -7,6 +8,10 @@ const MeetupDetails = ({ meetupData }) => {
 
   return (
     <>
+      <Head>
+        <title>{meetupData.title}</title>
+        <meta name="description" content={meetupData.description} />
+      </Head>
       <MeetupDetail
         image={meetupData.image}
         title={meetupData.title}
